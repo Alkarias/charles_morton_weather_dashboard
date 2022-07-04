@@ -20,8 +20,8 @@
         <div class="col col-3">
             <form id="search" class="card">
                 <h2>Search for a City:</h2>
-                <input placeholder="San Diego">
-                <button class="btn btn-primary col">Search</button>
+                <input id="cityName" placeholder="San Diego">
+                <button id="searchBtn" class="btn btn-primary col">Search</button>
             </form>
             <form id="previous" class="card">
                 <button class="btn bg-light-gray">Austin</button>
@@ -35,12 +35,12 @@
             </form>
         </div>
         <div class="col col-9">
-            <div id="city">
+            <div id="cityDisplay">
                 <h3>Atlanta (3/30/2021)</h3>
                 <p>Temp:</p>
                 <p>Wind:</p>
                 <p>Humidity:</p>
-                <p>UV Index:</p>
+                <p>UV Index: <span class="minimal"></span></p>
             </div>
             <div>
                 <h4>5-Day Forecast:</h4>
@@ -85,12 +85,8 @@
         </div>
     </section>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
-    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js" 
-    integrity="sha512-x/vqovXY/Q4b+rNjgiheBsA/vbWA3IVvsS8lkQSX1gQ4ggSJx38oI2vREZXpTzhAv6tNUaX81E7QBBzkpDQayA==" 
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>
 </body>
 </html>
