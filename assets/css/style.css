@@ -76,6 +76,10 @@ button {
     padding: 0.25rem;
 }
 
+.hide {
+    display: none;
+}
+
 #search {
     border:0;
     border-bottom: 2px solid #6c757d;

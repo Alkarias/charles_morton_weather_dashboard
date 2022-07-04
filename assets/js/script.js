@@ -6,6 +6,7 @@ var searchBtn = $('#searchBtn');
 var cityName = $('#cityName');
 var cityDisplay = $('#cityDisplay');
 var previousSearches = $('#previous');
+var infoDisplay = $('#infoDisplay');
 
 //event listener for the click of the search button
 searchBtn.on('click', function(event) { 
@@ -14,8 +15,21 @@ searchBtn.on('click', function(event) {
         cityName.attr('placeholder', 'No City Entered'); // displays an error message
         return; //stops any more code from being run
     }
-    webRequest(cityName.val()); 
+    //formats the string to be lowercase, except for the first character
+    var str = formatInput(cityName.val());
+    //appends a new button that holds the new value as long as it isn't already in the list
+    appendNewButton(str);
+    //sends a request for the geo location
+    webRequest(cityName.val());
+    cityName.val(""); // clears the value from the text input
 });
+//event listener for the previously searched buttons
+previousSearches.on('click','.btn', btnClick);
+
+function btnClick(event) {
+    event.preventDefault();
+    webRequest($(this).text()); // sends a web request based on the text on the button
+}
 
 function webRequest(input) {
     //creates a usable url with the input received
@@ -28,7 +42,9 @@ function webRequest(input) {
         console.log(data[0].lat, data[0].lon);
         //updates the UI to show the city searched and the date
         var todayDate = moment().format('M/D/YYYY'); // gets todays date
-        cityDisplay.children().eq(0).text(data[0].name+", "+data[0].state+" ("+todayDate+")");
+        var container = data[0].state;
+        if (container === undefined) container = data[0].country;
+        cityDisplay.children().eq(0).text(data[0].name+", "+container+" ("+todayDate+")");
         getWeather(data);
     });
 }
@@ -45,6 +61,8 @@ function getWeather(geoData) {
         cityDisplay.children().eq(3).text('Humidity: '+data.current.humidity+"%");
         checkIndex(data.current.uvi);
         cityDisplay.children().eq(4).children().text(data.current.uvi);
+
+        infoDisplay.removeClass('hide');
     });
 }
 
@@ -67,3 +85,23 @@ function checkIndex(rating) {
     }
 }
 
+function formatInput(str) {
+    var words = str.split(" "); //splits the name into individual words
+    var output = "";
+    console.log(words);
+    // loops through the words and formats each one into Aaaaa
+    for (var i = 0; i < words.length; i++) { 
+        console.log(words[i]);
+        words[i] = words[i].substring(0,1).toUpperCase() + words[i].substring(1,words[i].length).toLowerCase();
+        output += words[i] + " "; // concatenates the indexes into a single string
+        console.log(words[i]);
+    }
+    return output.trim(); //returns the concatenated string with no spaces before or after
+}
+
+function appendNewButton(str) {
+    for (var i = 0; i < previousSearches.children().length; i++) {
+        if (previousSearches.children().eq(i).text() === str) return;
+    }
+    previousSearches.append('<button class="btn bg-light-gray">'+str+'</button>');
+}
