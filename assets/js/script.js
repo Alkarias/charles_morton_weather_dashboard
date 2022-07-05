@@ -8,6 +8,8 @@ var cityDisplay = $('#cityDisplay');
 var previousSearches = $('#previous');
 var infoDisplay = $('#infoDisplay');
 
+init(); //initialize the program with the values in localStorage
+
 //event listener for the click of the search button
 searchBtn.on('click', function(event) { 
     event.preventDefault(); // stops the form from resetting itself
@@ -26,6 +28,15 @@ searchBtn.on('click', function(event) {
 //event listener for the previously searched buttons
 previousSearches.on('click','.btn', btnClick);
 
+function init() {
+    //grab the local storage array, otherwise, assign the variable to an empty array
+    var local = JSON.parse(localStorage.getItem('pastSearches')) || []; 
+    console.log(local);
+    for (var i = 0; i < local.length; i++) { // add a button for every index in local
+        previousSearches.append('<button class="btn bg-light-gray">'+local[i]+'</button>');
+    }
+}
+
 function btnClick(event) {
     event.preventDefault();
     webRequest($(this).text()); // sends a web request based on the text on the button
@@ -42,7 +53,8 @@ function webRequest(input) {
         console.log(data[0].lat, data[0].lon);
         //updates the UI to show the city searched and the date
         var todayDate = moment().format('M/D/YYYY'); // gets todays date
-        var container = data[0].state;
+        // switches the display to show the country if the state is empty
+        var container = data[0].state; 
         if (container === undefined) container = data[0].country;
         cityDisplay.children().eq(0).text(data[0].name+", "+container+" ("+todayDate+")");
         getWeather(data);
@@ -82,7 +94,7 @@ function checkIndex(rating) {
         indexBox.addClass('moderate');
     } else {
         indexBox.addClass('high');
-    }
+    } // :)
 }
 
 function formatInput(str) {
@@ -104,4 +116,7 @@ function appendNewButton(str) {
         if (previousSearches.children().eq(i).text() === str) return;
     }
     previousSearches.append('<button class="btn bg-light-gray">'+str+'</button>');
+    var local = JSON.parse(localStorage.getItem('pastSearches')) || [];
+    local.push(str);
+    localStorage.setItem('pastSearches',JSON.stringify(local));
 }
