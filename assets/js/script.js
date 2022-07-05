@@ -7,6 +7,7 @@ var cityName = $('#cityName');
 var cityDisplay = $('#cityDisplay');
 var previousSearches = $('#previous');
 var infoDisplay = $('#infoDisplay');
+var forecast = $('#forecast');
 
 init(); //initialize the program with the values in localStorage
 
@@ -73,7 +74,7 @@ function getWeather(geoData) {
         cityDisplay.children().eq(3).text('Humidity: '+data.current.humidity+"%");
         checkIndex(data.current.uvi);
         cityDisplay.children().eq(4).children().text(data.current.uvi);
-
+        populateForecast(data);
         infoDisplay.removeClass('hide');
     });
 }
@@ -119,4 +120,15 @@ function appendNewButton(str) {
     var local = JSON.parse(localStorage.getItem('pastSearches')) || [];
     local.push(str);
     localStorage.setItem('pastSearches',JSON.stringify(local));
+}
+
+function populateForecast(data) {
+    for (var i = 0; i < 5; i++) {
+        var day = forecast.children().eq(i);
+        day.children().eq(0).text(moment().add(i+1,'days').format('M/D/YYYY'));
+        
+        day.children().eq(2).text('Temp: '+data.daily[i].temp.day+"°F");
+        day.children().eq(3).text('Wind: '+data.daily[i].wind_speed+" MPH");
+        day.children().eq(4).text('Humidity: '+data.daily[i].humidity+"%");
+    }
 }
