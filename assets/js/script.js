@@ -57,7 +57,7 @@ function webRequest(input) {
         // switches the display to show the country if the state is empty
         var container = data[0].state; 
         if (container === undefined) container = data[0].country;
-        cityDisplay.children().eq(0).text(data[0].name+", "+container+" ("+todayDate+")");
+        cityDisplay.find('h3').text(data[0].name+", "+container+" ("+todayDate+")");
         getWeather(data);
     });
 }
@@ -69,13 +69,17 @@ function getWeather(geoData) {
         return res.json();
     }).then(function(data) {
         console.log(data);
-        cityDisplay.children().eq(1).text('Temp: '+data.current.temp+"°F");
-        cityDisplay.children().eq(2).text('Wind: '+data.current.wind_speed+" MPH");
-        cityDisplay.children().eq(3).text('Humidity: '+data.current.humidity+"%");
-        checkIndex(data.current.uvi);
-        cityDisplay.children().eq(4).children().text(data.current.uvi);
-        populateForecast(data);
-        infoDisplay.removeClass('hide');
+        //displays the weather icon beside the city name and current date
+        var icon = data.current.weather[0].icon;
+        cityDisplay.children().eq(1).attr('src','http://openweathermap.org/img/wn/'+icon+'.png');
+        cityDisplay.children().eq(1).attr('alt',data.current.weather[0].main);
+        cityDisplay.children().eq(2).text('Temp: '+data.current.temp+"°F"); // shows the current temperature
+        cityDisplay.children().eq(3).text('Wind: '+data.current.wind_speed+" MPH"); // shows the current wind speed
+        cityDisplay.children().eq(4).text('Humidity: '+data.current.humidity+"%"); // shows the current humidity
+        checkIndex(data.current.uvi); // sets the background color of the UV index
+        cityDisplay.children().eq(5).children().text(data.current.uvi); // displays the current UV index
+        populateForecast(data); // renders the 5-day forecast
+        infoDisplay.removeClass('hide'); // allows the user display to be seen
     });
 }
 
@@ -113,22 +117,26 @@ function formatInput(str) {
 }
 
 function appendNewButton(str) {
+    //loops through the list of buttons and exits the function if the current search is already in the list
     for (var i = 0; i < previousSearches.children().length; i++) {
         if (previousSearches.children().eq(i).text() === str) return;
     }
-    previousSearches.append('<button class="btn bg-light-gray">'+str+'</button>');
-    var local = JSON.parse(localStorage.getItem('pastSearches')) || [];
-    local.push(str);
-    localStorage.setItem('pastSearches',JSON.stringify(local));
+    previousSearches.append('<button class="btn bg-light-gray">'+str+'</button>'); // appends the new button to the form
+    var local = JSON.parse(localStorage.getItem('pastSearches')) || []; // gets the localStorage data
+    local.push(str); // adds the new list item to the list in localStorage
+    localStorage.setItem('pastSearches',JSON.stringify(local)); // updates localStorage
 }
 
 function populateForecast(data) {
+    //loops through the data to display a 5-day forecast
     for (var i = 0; i < 5; i++) {
-        var day = forecast.children().eq(i);
-        day.children().eq(0).text(moment().add(i+1,'days').format('M/D/YYYY'));
-        
-        day.children().eq(2).text('Temp: '+data.daily[i].temp.day+"°F");
-        day.children().eq(3).text('Wind: '+data.daily[i].wind_speed+" MPH");
-        day.children().eq(4).text('Humidity: '+data.daily[i].humidity+"%");
+        var day = forecast.children().eq(i); // moves through the different divs
+        var icon = data.daily[i].weather[0].icon; // gets the icon of the indexed day
+        day.children().eq(0).text(moment().add(i+1,'days').format('M/D/YYYY')); // display the date of the respective index
+        day.children().eq(1).attr('src','http://openweathermap.org/img/wn/'+icon+'.png'); // gets the icon for the indexed day
+        day.children().eq(1).attr('alt',data.daily[i].weather[0].main); // sets the alt text of the icon to be more descriptive
+        day.children().eq(2).text('Temp: '+data.daily[i].temp.day+"°F"); // displays the temperature of the indexed day
+        day.children().eq(3).text('Wind: '+data.daily[i].wind_speed+" MPH"); // displays the wind speed of the indexed day
+        day.children().eq(4).text('Humidity: '+data.daily[i].humidity+"%"); // displays the humidity of the indexed day
     }
 }
