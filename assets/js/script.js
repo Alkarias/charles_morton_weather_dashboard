@@ -1,4 +1,4 @@
-const geoRequest = 'http://api.openweathermap.org/geo/1.0/direct'
+const geoRequest = 'https://api.openweathermap.org/geo/1.0/direct'
 const weatherRequest = 'https://api.openweathermap.org/data/2.5/onecall'
 const apiKey = '3f434e6779e3b94284bef2d455a52ba8';
 
