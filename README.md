@@ -7,13 +7,13 @@ Once cities have been searched, they will be logged and a button for the respect
 
 ## Appearance
 
-The starting interface is very simple. The only information 
-
-
+The starting interface is very simple. The only fields available to the user are the input box and the search button. Once a city has been requested, information will populate the page with current weather information about the requested city. This includes the temperature, wind speed, humidity and UV index. Below the current information is a 5-day forecast that predicts the weather for the next 5 days in the requested city. Once a city has been searched, it will populate underneath of the search bar. This is for easy return to previously searched cities.
 
 ## Interface
+
 ![starting interface](./assets/images/starting-interface.png)
 
+![city information](./assets/images/search-data.png)
 
 ## Github Pages
 
